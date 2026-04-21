@@ -1,0 +1,110 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Database files
+db.sqlite3
+*.db
+arogyanetra.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Frontend dependencies
+node_modules/
+frontend/dist/
+frontend/build/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Coverage reports
+.coverage
+.pytest_cache/
+htmlcov/
+coverage.xml
+*.cover
+
+# Test files
+test_*.py
+tests/__pycache__/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Large data files
+*.csv
+*.zip
+*.tar
+*.tar.gz
+
+# Model files (optional - keep if size < 100MB)
+*.pkl
+*.joblib
+*.h5
+
+# PDF reports (generated)
+*.pdf
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Misc
+.cache/
+.vscode-server/

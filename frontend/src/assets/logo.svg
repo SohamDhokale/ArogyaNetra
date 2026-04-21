@@ -1,0 +1,30 @@
+<svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="eyeGradient" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#0072FF" />
+      <stop offset="100%" stop-color="#00C6FF" />
+    </linearGradient>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2ECC71" />
+      <stop offset="100%" stop-color="#27AE60" />
+    </linearGradient>
+  </defs>
+  <!-- Outer Eye Shape -->
+  <path d="M50 250C50 250 150 100 250 100C350 100 450 250 450 250C450 250 350 400 250 400C150 400 50 250 50 250Z" stroke="url(#eyeGradient)" stroke-width="20" fill="none" />
+  
+  <!-- Iris/Pupil Area -->
+  <circle cx="250" cy="250" r="80" fill="url(#eyeGradient)" fill-opacity="0.1" />
+  
+  <!-- Medical Staff (Caduceus) - Simplified -->
+  <rect x="245" y="180" width="10" height="140" rx="5" fill="#2980B9" />
+  <path d="M220 200C220 200 240 210 250 230C260 210 280 200 280 200" stroke="#2980B9" stroke-width="8" stroke-linecap="round" fill="none" />
+  <path d="M220 250C220 250 240 260 250 280C260 260 280 250 280 250" stroke="#2980B9" stroke-width="8" stroke-linecap="round" fill="none" />
+  
+  <!-- Leaves -->
+  <path d="M250 180C250 180 220 150 220 120C220 150 250 160 250 180Z" fill="url(#leafGradient)" />
+  <path d="M250 180C250 180 280 150 280 120C280 150 250 160 250 180Z" fill="url(#leafGradient)" />
+  
+  <!-- Sparkles -->
+  <path d="M380 150L385 135L400 130L385 125L380 110L375 125L360 130L375 135L380 150Z" fill="#3498DB" />
+  <path d="M410 180L413 172L420 170L413 168L410 160L407 168L400 170L407 172L410 180Z" fill="#2ECC71" />
+</svg>

@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+django>=4.2
+djangorestframework
+psycopg2-binary
+pydantic
+python-multipart
+django-cors-headers
+django-environ
+gunicorn
