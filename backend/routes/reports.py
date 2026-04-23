@@ -1,14 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import Response
 from predictor.models import Patient
+from ..whatsapp_service import whatsapp_service
+import os
+import io
+import json
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
-import io
-import json
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  # Use non-GUI backend
@@ -367,3 +369,29 @@ def download_report(patient_id: str):
     
     return Response(buffer.getvalue(), media_type="application/pdf",
                     headers={"Content-Disposition": f"attachment; filename=Patient_{patient_id}_Report.pdf"})
+
+@router.post("/whatsapp/{patient_id}")
+def send_whatsapp_report(patient_id: str, request: Request):
+    try:
+        patient = Patient.objects.get(patient_id=patient_id)
+    except Patient.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    if not patient.phone_number:
+        raise HTTPException(status_code=400, detail="Patient does not have a registered phone number")
+    
+    # Construct the report URL
+    base_url = str(request.base_url).rstrip('/')
+    report_url = f"{base_url}/reports/download/{patient_id}"
+    
+    success = whatsapp_service.send_report_link(
+        to_number=patient.phone_number,
+        patient_name=patient.name or "Patient",
+        risk_score=patient.risk_score or 0.0,
+        report_url=report_url
+    )
+    
+    if success:
+        return {"status": "success", "message": f"WhatsApp report link sent to {patient.phone_number}"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to send WhatsApp message")

@@ -21,6 +21,7 @@ class UserResponse(UserBase):
 class PatientBase(BaseModel):
     patient_id: str
     name: Optional[str] = "Unknown"
+    phone_number: Optional[str] = None
     location: Optional[str] = "Unknown"
     age: int
     gender: str
@@ -37,6 +38,7 @@ class PatientCreate(PatientBase):
 
 class PatientUpdate(BaseModel):
     name: Optional[str] = None
+    phone_number: Optional[str] = None
     location: Optional[str] = None
     age: Optional[int] = None
     gender: Optional[str] = None

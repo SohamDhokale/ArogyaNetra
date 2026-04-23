@@ -38,6 +38,7 @@ class Patient(models.Model):
     
     patient_id = models.CharField(max_length=50, unique=True, db_index=True)
     name = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True, help_text="WhatsApp number with country code")
     location = models.CharField(max_length=255, blank=True, null=True)
     age = models.IntegerField()
     gender = models.CharField(max_length=10)

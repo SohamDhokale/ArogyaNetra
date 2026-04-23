@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-  BarChart2, PlusCircle, RefreshCw, ChevronRight, TrendingUp, Download, Users, Search, Filter, LogOut, Settings, Bell, X, ChevronDown, User, Clock, Heart, AlertTriangle, CheckCircle, FileText, Stethoscope, Activity
+  BarChart2, PlusCircle, RefreshCw, ChevronRight, TrendingUp, Download, Users, Search, Filter, LogOut, Settings, Bell, X, ChevronDown, User, Clock, Heart, AlertTriangle, CheckCircle, FileText, Stethoscope, Activity, MessageSquare
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import logo from '../assets/logo.svg';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [newPatient, setNewPatient] = useState({
     patient_id: '',
     name: '',
+    phone_number: '',
     location: '',
     age: 60,
     gender: 'Male',
@@ -100,7 +101,7 @@ const Dashboard = () => {
       await axios.post(`${API_BASE_URL}/patients/`, newPatient);
       setIsAddingPatient(false);
       setNewPatient({
-        patient_id: '', name: '', location: '', age: 60, gender: 'Male',
+        patient_id: '', name: '', phone_number: '', location: '', age: 60, gender: 'Male',
         glucose: 110, blood_pressure: 80, bmi: 24.5, chronic_illnesses: 1,
         previous_admissions: 0, length_of_stay: 3, discharge_disposition: 'Home'
       });
@@ -113,6 +114,46 @@ const Dashboard = () => {
 
   const downloadReport = (patientId) => {
     window.open(`${API_BASE_URL}/reports/download/${patientId}`, '_blank');
+  };
+
+  const shareViaWhatsApp = (patient) => {
+    if (!patient.risk_score) {
+      alert("Please run the analysis first to get a risk score.");
+      return;
+    }
+    
+    const riskLabel = getRiskLevel(patient.risk_score).toUpperCase();
+    const text = `🏥 *ArogyaNetra Clinical Alert*\n\nPatient: ${patient.name}\nRisk Score: ${patient.risk_score.toFixed(2)}%\nCategory: ${riskLabel}\n\nFull Report: ${API_BASE_URL}/reports/download/${patient.patient_id}`;
+    const encodedText = encodeURIComponent(text);
+    
+    // Format number for wa.me: remove all non-digits
+    let phoneNumber = patient.phone_number || '';
+    let cleanNumber = phoneNumber.replace(/\D/g, '');
+    
+    // If it's 10 digits, assume India (91)
+    if (cleanNumber.length === 10) {
+      cleanNumber = '91' + cleanNumber;
+    }
+    
+    if (!cleanNumber) {
+      alert("Patient does not have a valid phone number.");
+      return;
+    }
+
+    window.open(`https://wa.me/${cleanNumber}?text=${encodedText}`, '_blank');
+  };
+
+  const sendWhatsAppReport = async (patientId) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${API_BASE_URL}/reports/whatsapp/${patientId}`);
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error sending WhatsApp report", error);
+      alert(error.response?.data?.detail || "Failed to send WhatsApp report. Make sure the patient has a phone number and the service is configured.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Apply advanced filters
@@ -357,6 +398,20 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
+                          <button 
+                            onClick={() => shareViaWhatsApp(selectedPatient)}
+                            className={`${isDark ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50 border-green-800' : 'bg-green-50 text-green-600 hover:bg-green-100 border-green-200'} px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-bold text-sm border focus:outline-none focus:ring-2 focus:ring-green-400`}
+                            title="Share summary via WhatsApp"
+                          >
+                            <MessageSquare size={16} aria-hidden="true" /> Share
+                          </button>
+                          <button 
+                            onClick={() => sendWhatsAppReport(selectedPatient.patient_id)}
+                            className={`${isDark ? 'bg-indigo-900/30 text-indigo-400 hover:bg-indigo-900/50 border-indigo-800' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border-indigo-200'} px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-bold text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-400`}
+                            title="Send official report to patient WhatsApp"
+                          >
+                            <FileText size={16} aria-hidden="true" /> Send Report
+                          </button>
                           <button 
                             onClick={() => downloadReport(selectedPatient.patient_id)}
                             className={`${isDark ? 'bg-slate-800 text-slate-100 hover:bg-slate-700' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-bold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400`}
@@ -754,6 +809,7 @@ const Dashboard = () => {
               {[
                 { key: 'patient_id', label: 'Patient ID', type: 'text', required: true },
                 { key: 'name', label: 'Name', type: 'text' },
+                { key: 'phone_number', label: 'WhatsApp Number', type: 'text', placeholder: '+1234567890' },
                 { key: 'location', label: 'Location', type: 'text' },
                 { key: 'age', label: 'Age', type: 'number', min: 0, max: 150 },
                 { key: 'gender', label: 'Gender', type: 'select', options: ['Male', 'Female', 'Other'] },
