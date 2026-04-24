@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetes Prediction</title>
+</head>
+<body>
+
+<h2>Enter Patient Details</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <input type="text" name="f1" placeholder="Feature 1"><br>
+    <input type="text" name="f2" placeholder="Feature 2"><br>
+    <input type="text" name="f3" placeholder="Feature 3"><br>
+    <input type="text" name="f4" placeholder="Feature 4"><br>
+    <input type="text" name="f5" placeholder="Feature 5"><br>
+    <input type="text" name="f6" placeholder="Feature 6"><br>
+    <input type="text" name="f7" placeholder="Feature 7"><br>
+    <input type="text" name="f8" placeholder="Feature 8"><br>
+
+    <button type="submit">Predict</button>
+</form>
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Healthcare Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>🧠 ArogyaNetra AI Dashboard</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <h3>Enter Patient Data</h3>
+
+    {% for i in "12345678" %}
+        <input type="number" step="any" name="f{{i}}" placeholder="Feature {{i}}" required><br>
+    {% endfor %}
+
+    <button type="submit">Predict</button>
+</form>
+
+<hr>
+
+{% if result %}
+<h2>Prediction: {{ result }}</h2>
+<h3>Risk Probability: {{ probability }}%</h3>
+
+<canvas id="riskChart" width="300" height="300"></canvas>
+
+<script>
+const ctx = document.getElementById('riskChart');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Risk', 'Safe'],
+        datasets: [{
+            data: [{{ probability }}, 100 - {{ probability }}]
+        }]
+    }
+});
+</script>
+
+{% endif %}
+
+<hr>
+
+<h2>📋 Recent Patients</h2>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Prediction</th>
+    <th>Probability</th>
+    <th>Date</th>
+</tr>
+
+{% for r in records %}
+<tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.prediction }}</td>
+    <td>{{ r.probability|floatformat:2 }}</td>
+    <td>{{ r.created_at }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

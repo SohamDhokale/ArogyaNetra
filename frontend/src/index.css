@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+html {
+  background-color: #fdfaf1 !important;
+}
+
+:root {
+  font-family: 'Hind', 'Poppins', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color-scheme: light;
+  color: #0f172a;
+  background-color: #fdfaf1 !important;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Hind', sans-serif;
+  background-color: #fdfaf1 !important;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fdfaf1 !important;
+}
+
+.bg-cream-50 {
+  background-color: #fdfaf1 !important;
+}
+
+.bg-cream-100 {
+  background-color: #f9f4e2 !important;
+}
+
+.bg-cream-200 {
+  background-color: #f1e6bc !important;
+}
